@@ -55,7 +55,7 @@ module.exports = {
   getFacebookInvitableFriendsList: function (picture_width, picture_height) {
     let fb_api_for_invitable_friends = `/me?fields=invitable_friends.limit(1000){name,id,picture.width(${picture_width}).height(${picture_height})}`;
     window.FB.api(fb_api_for_invitable_friends, (response) => {
-      // console.log("getFacebookInvitableFriendsList", response);
+      console.log("getFacebookInvitableFriendsList", response);
       Dispatcher.dispatch({
           type: FacebookConstants.FACEBOOK_RECEIVED_INVITABLE_FRIENDS,
           data: response
@@ -92,21 +92,23 @@ module.exports = {
     // FB.getLoginStatus does an ajax call and when you call FB.login on it's response, the popup that would open
     // as a result of this call is blocked. A solution to this problem would be to to specify status: true in the
     // options object of FB.init and you need to be confident that login status has already loaded.
-    window.FB.getLoginStatus(function (response) {
-      if (response.status === "connected") {
-        Dispatcher.dispatch({
-            type: FacebookConstants.FACEBOOK_LOGGED_IN,
-            data: response
-        });
-      } else {
-        window.FB.login( (res) =>{
+    if (window.FB){
+      window.FB.getLoginStatus(function (response) {
+        if (response.status === "connected") {
           Dispatcher.dispatch({
               type: FacebookConstants.FACEBOOK_LOGGED_IN,
-              data: res
+              data: response
           });
-        }, {scope: "public_profile,email,user_friends"});
-      }
-    });
+        } else {
+          window.FB.login( (res) =>{
+            Dispatcher.dispatch({
+                type: FacebookConstants.FACEBOOK_LOGGED_IN,
+                data: res
+            });
+          }, {scope: "public_profile,email,user_friends"});
+        }
+      });
+    }
   },
 
   logout: function () {

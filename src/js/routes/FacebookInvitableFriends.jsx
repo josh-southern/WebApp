@@ -61,9 +61,9 @@ export default class FacebookInvitableFriends extends Component {
   }
 
   componentDidMount () {
-    this._onVoterStoreChange();
+    //this._onVoterStoreChange();
     this.voterStoreListener = VoterStore.addListener(this._onVoterStoreChange.bind(this));
-    this._onFacebookStoreChange();
+    //this._onFacebookStoreChange();
     this.facebookStoreListener = FacebookStore.addListener(this._onFacebookStoreChange.bind(this));
     AnalyticsActions.saveActionFacebookInvitableFriends(VoterStore.election_id());
   }
@@ -81,9 +81,9 @@ export default class FacebookInvitableFriends extends Component {
     this.setState({ voter: VoterStore.getVoter() });
   }
 
-  _onVoterStoreChange () {
-    this.setState({ voter: VoterStore.getVoter() });
-  }
+  //_onVoterStoreChange () {
+    //this.setState({ voter: VoterStore.getVoter() });
+  //}
 
   _onFacebookStoreChange () {
     this.setState({
@@ -230,6 +230,7 @@ export default class FacebookInvitableFriends extends Component {
     // console.log("facebook logged in: ", this.state.facebook_logged_in);
     if (!this.state.facebook_logged_in ) {
       // console.log("Voter is not logged in through facebook");
+      console.log("Calling facebook.");
       this.facebookLogin();
       return LoadingWheel;
     }
