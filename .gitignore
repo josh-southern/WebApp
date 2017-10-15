@@ -177,3 +177,7 @@ package-lock.json
 *.pyc
 staticfiles
 
+# Config #
+##########
+src/js/config.js
+
