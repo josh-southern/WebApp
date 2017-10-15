@@ -175,6 +175,7 @@ class VoterStore extends FluxMapStore {
   reduce (state, action) {
 
     let voter_device_id;
+
     switch (action.type) {
       case "organizationSave":
         // If an organization saves, we want to check to see if it is tied to this voter. If so,
@@ -382,6 +383,8 @@ class VoterStore extends FluxMapStore {
         };
 
       case "voterRetrieve":
+        console.log("voterRetrieve called.");
+
         let current_voter_device_id = cookies.getItem("voter_device_id");
         if (!action.res.voter_found) {
           // console.log("This voter_device_id is not in the db and is invalid, so delete it: " +
@@ -406,10 +409,21 @@ class VoterStore extends FluxMapStore {
             }
             VoterActions.voterAddressRetrieve(voter_device_id);
             const url = action.res.facebook_profile_image_url_https;
+
+            // FriendsInvitationList.jsx is choking on this because calling this
+            // results in an infinite loop cycling between voterRetrieve and getFaceProfilePicture which
+            // resolves to FACEBOOK_RECIEVED_PICTURE which then attempts to save using voterFacebookSignInPhoto
+            // which in turn resolves to voterFacebookSignInSave which finally attempts to call
+            // voterRetrieve again
+
+            // url never seems to be satisfied in this case
+            
+            /*
             if (action.res.signed_in_facebook && (url === null || url === "")) {
               const userId = FacebookStore.userId;
               FacebookActions.getFacebookProfilePicture(userId);
             }
+            */
           } else {
               // console.log("voter_device_id not returned by voterRetrieve");
           }
